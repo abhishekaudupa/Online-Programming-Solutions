@@ -1,5 +1,8 @@
 #include <iostream>
-#include <bitset>
+#include <deque>
+#include <stack>
+#include <queue>
+#include <deque>
 
 /*
    Lowest Common Ancestor of a Binary Tree
@@ -35,12 +38,15 @@ p and q will exist in the tree.
 
 Solution: Recursive
 	We do a depth first search (pre-order in this case, others would do just as well).
-	We'll have a pathCodec to that records the path of the node to be found (I'm using
-	a bitset of 10000 bits, with 1 indicating a left node and 0 indicating a right node,
-	root node is 0). We'll compare the path coded of both nodes and the node at which 
-	the path codec starts to differ is the LCA node.
+	During each recursion, we'll push the root into two double ended ques (say dq_p and dq_q).
+	These queues represent the path for both nodes p and q from the root node. Once we find
+	p, we stop pushing nodes into the dq_p and the same goes for node q. Once both nodes are
+	found we stop searching.
 
-	This idea doesn't look very efficient. I've got a better idea. See the other commit.
+	Now we compare elements in both queues and see at what node they start to differ. The node
+	before the difference shows up is the LCA node.
+
+	This solution is better than the previous one (see previous commit).
  */
 
 struct TreeNode {
@@ -52,72 +58,67 @@ struct TreeNode {
 
 class Solution {
     public:
-	std::bitset<10001> pathCodec_p;
-	std::bitset<10001> pathCodec_q;
-	int level_p{};
-	int level_q{};
+	std::deque<TreeNode*> s_p;
+	std::deque<TreeNode*> s_q;
+	bool p_found{ false }, q_found{ false };
 
-	void preOrderSearch(TreeNode* root, TreeNode* p, TreeNode* q, int level, std::bitset<10001> pathCodec)
+	void preOrderSearch(TreeNode* root, TreeNode* p, TreeNode* q)
 	{
-	    if(level_p && level_q)
+	    if(p_found && q_found)
 		return;
 
+	    if(!p_found)
+		s_p.push_back(root);
+
+	    if(!q_found)
+		s_q.push_back(root);
+
 	    if(root->val == p->val)
-	    {
-		level_p = level;
-		pathCodec_p = pathCodec;
-	    }
+		p_found = true;
 
 	    if(root->val == q->val)
-	    {
-		level_q = level;
-		pathCodec_q = pathCodec;
-	    }
+		q_found = true;
 
 	    if(root->left)
-	    {
-		preOrderSearch(root->left, p, q, level + 1, ((pathCodec << 1) | std::bitset<10001>(1)));
-	    }
+		preOrderSearch(root->left, p, q);
 
-	    if(root->right)
-	    {
-		preOrderSearch(root->right, p, q, level + 1, pathCodec << 1);
-	    }
+	    if(root->right && !(p_found && q_found))
+		preOrderSearch(root->right, p, q);
+
+	    if(!p_found)
+		s_p.pop_back();
+
+	    if(!q_found)
+		s_q.pop_back();
 	}
 
-	TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+	TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q)
+	{
 	    if(p == root)
 		return root;
 
 	    if(q == root)
 		return root;
 
-	    preOrderSearch(root, p, q, 0, 0);
+	    preOrderSearch(root, p, q);
 
-	    int i{};
 	    auto lca{ root };
-	    while(1)
+
+	    while(!s_q.empty() && !s_p.empty())
 	    {
-		if((level_p - i - 1 >= 0) && (level_q - i -1 >= 0))
+		if(s_q.front() == s_p.front())
 		{
-		    auto dir_p{ (pathCodec_p >> (level_p - i - 1)) & std::bitset<10001>(1) };
-		    auto dir_q{ (pathCodec_q >> (level_q - i - 1)) & std::bitset<10001>(1) };
-		    if(dir_p == dir_q)
-		    {
-			if(dir_p[0])
-			    lca = lca->left;
-			else
-			    lca = lca->right;
-		    }
-		    else
-			return lca;
-		    ++i;
+		    lca = s_q.front();
+		    s_q.pop_front();
+		    s_p.pop_front();
 		}
 		else
 		{
-		    return lca;
+		    break;
 		}
 	    }
+
+	    return lca;
 	}
 };
 
@@ -143,7 +144,7 @@ int main()
     n2.right = &n4;
 
     Solution s;
-    auto lca{ s.lowestCommonAncestor(&n3, &n4, &n6) };
-    std::cout << "LCA of node 6 and 4 is " << lca->val << '\n';
+    auto lca{ s.lowestCommonAncestor(&n3, &n6, &n2) };
+    std::cout << "LCA of node 6 and 2 is " << lca->val << '\n';
 }
 
