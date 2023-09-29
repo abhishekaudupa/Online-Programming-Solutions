@@ -1,8 +1,4 @@
 #include <iostream>
-#include <deque>
-#include <stack>
-#include <queue>
-#include <deque>
 
 /*
    Lowest Common Ancestor of a Binary Tree
@@ -38,15 +34,11 @@ p and q will exist in the tree.
 
 Solution: Recursive
 	We do a depth first search (pre-order in this case, others would do just as well).
-	During each recursion, we'll push the root into two double ended ques (say dq_p and dq_q).
-	These queues represent the path for both nodes p and q from the root node. Once we find
-	p, we stop pushing nodes into the dq_p and the same goes for node q. Once both nodes are
-	found we stop searching.
 
-	Now we compare elements in both queues and see at what node they start to differ. The node
-	before the difference shows up is the LCA node.
+	The concept: if we're given a root and p and q are found on the LST (or RST) and
+	RST (or LST) of the root, then LCA is the root itself.
 
-	This solution is better than the previous one (see previous commit).
+	Code is self-explanatory
  */
 
 struct TreeNode {
@@ -58,67 +50,37 @@ struct TreeNode {
 
 class Solution {
     public:
-	std::deque<TreeNode*> s_p;
-	std::deque<TreeNode*> s_q;
 	bool p_found{ false }, q_found{ false };
-
-	void preOrderSearch(TreeNode* root, TreeNode* p, TreeNode* q)
-	{
-	    if(p_found && q_found)
-		return;
-
-	    if(!p_found)
-		s_p.push_back(root);
-
-	    if(!q_found)
-		s_q.push_back(root);
-
-	    if(root->val == p->val)
-		p_found = true;
-
-	    if(root->val == q->val)
-		q_found = true;
-
-	    if(root->left)
-		preOrderSearch(root->left, p, q);
-
-	    if(root->right && !(p_found && q_found))
-		preOrderSearch(root->right, p, q);
-
-	    if(!p_found)
-		s_p.pop_back();
-
-	    if(!q_found)
-		s_q.pop_back();
-	}
 
 	TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q)
 	{
 	    if(p == root)
-		return root;
-
-	    if(q == root)
-		return root;
-
-	    preOrderSearch(root, p, q);
-
-	    auto lca{ root };
-
-	    while(!s_q.empty() && !s_p.empty())
 	    {
-		if(s_q.front() == s_p.front())
-		{
-		    lca = s_q.front();
-		    s_q.pop_front();
-		    s_p.pop_front();
-		}
-		else
-		{
-		    break;
-		}
+		p_found = true;
+		return root;
 	    }
 
-	    return lca;
+	    if(q == root)
+	    {
+		q_found = true;
+		return root;
+	    }
+
+	    if(!root)
+		return root;
+
+	    if(p_found && q_found)
+		return nullptr;
+
+	    auto a { lowestCommonAncestor(root->left, p, q) };
+	    auto b { lowestCommonAncestor(root->right, p, q) };
+
+	    if(a && b)
+		return root;
+	    else if(a)
+		return a;
+	    else
+		return b;
 	}
 };
 
@@ -144,7 +106,7 @@ int main()
     n2.right = &n4;
 
     Solution s;
-    auto lca{ s.lowestCommonAncestor(&n3, &n6, &n2) };
-    std::cout << "LCA of node 6 and 2 is " << lca->val << '\n';
+    auto lca{ s.lowestCommonAncestor(&n3, &n7, &n6) };
+    std::cout << "LCA of node 7 and 6 is " << lca->val << '\n';
 }
 
