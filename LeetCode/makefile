@@ -16,3 +16,8 @@ move_hard :
 clean : 
 	rm *.out
 	clear
+
+format :
+	sed -i 's/Input:/Input-/g' *.cpp
+	sed -i 's/Output:/Output-/g' *.cpp
+	sed -i 's/Constraints:/Constraints-/g' *.cpp
