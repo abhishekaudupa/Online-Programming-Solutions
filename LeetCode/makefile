@@ -19,5 +19,6 @@ clean :
 
 format :
 	sed -i 's/Input:/Input-/g' *.cpp
+	sed -i 's/Explanation:/Explanation-/g' *.cpp
 	sed -i 's/Output:/Output-/g' *.cpp
 	sed -i 's/Constraints:/Constraints-/g' *.cpp
