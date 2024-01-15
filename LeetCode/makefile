@@ -1,5 +1,5 @@
 a.out : *.cpp
-	g++ *.cpp
+	g++ -Wall *.cpp
 
 move_easy:
 	mv *.cpp ./Easy/
