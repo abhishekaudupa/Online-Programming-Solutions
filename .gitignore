@@ -1,3 +1,4 @@
 *.out
 LeetCode/*.cpp
 *.txt
+LeetCode/makefile
