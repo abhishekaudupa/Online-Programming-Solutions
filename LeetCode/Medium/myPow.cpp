@@ -35,32 +35,23 @@
 
 class Solution {
 
-    std::unordered_map<int, double> store;
-
     public:
     double myPow(double x, int n) {
-	if(store.find(n) != store.end()) {
-	    return store.at(n);
-	}
-
 	if(x == 1) {
 	    return 1;
 	}
 
 	if(n == 0) {
-	    store.insert(std::make_pair(0, 1));
 	    return 1;
 	}
 
 	if(n > 0) {
+	    auto halfAns = myPow(x, n / 2);
 	    if(n % 2 == 0) {
-		auto ans = myPow(x, n / 2) * myPow(x, n / 2);
-		store.insert(std::make_pair(n, ans));
-		return ans;
+		return halfAns * halfAns;
 	    }
 
-	    auto ans = x * myPow(x, n / 2) * myPow(x, n / 2);
-	    store.insert(std::make_pair(n, ans));
+	    auto ans = x * halfAns * halfAns;
 	    return ans;
 	}
 
@@ -70,13 +61,12 @@ class Solution {
 	   integer overflow/underflow condition when you negate n that is
 	   at the extremes of integer datatype bounds.
 	 */
+	auto halfAns = myPow(x, -(n / 2));
 	if(n % 2 == 0) {
-	    auto ans = 1 / (myPow(x, -(n / 2)) * myPow(x, -(n / 2)));
-	    return ans;
+	    return 1 / (halfAns * halfAns);
 	}
 
-	auto ans = 1 / (x * myPow(x, -(n / 2)) * myPow(x, -(n / 2)));
-	return ans;
+	return 1 / (x * halfAns * halfAns);
     }
 };
 
