@@ -4,7 +4,7 @@ This is an ongoing effort to compile and share solutions to programming problems
 
 [My Leetcode Profile](https://leetcode.com/abhishekaudupa/)
 
-(43 solutions so far. Table under update...)
+(44 solutions so far. Table under update...)
 | Sl. No. | Problem | Site | Solution |
 | ----------- | ----------- | --------- | --------- |
 | 1. | [912. Sort an Array](https://leetcode.com/problems/sort-an-array/description/) | LeetCode | [Solution](https://github.com/abhishekaudupa/Online-Programming-Solutions/commit/590a6d58ea5b1fc894484bf727cdfe4813177568) |
@@ -13,3 +13,4 @@ This is an ongoing effort to compile and share solutions to programming problems
 | 4. | [189. Rotate Array](https://leetcode.com/problems/rotate-array/description/) | LeetCode | [Solution](https://github.com/abhishekaudupa/Online-Programming-Solutions/commit/ccb77cb2ff4b30787110ad4fa71e10f035b7b128) |
 | 5. | [209. Minimum Size Subarray Sum](https://leetcode.com/problems/minimum-size-subarray-sum/description/) | LeetCode | [Solution](https://github.com/abhishekaudupa/Online-Programming-Solutions/commit/ccb77cb2ff4b30787110ad4fa71e10f035b7b128) |
 | 6. | [98. Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree/) | LeetCode | [Solution](https://github.com/abhishekaudupa/Online-Programming-Solutions/commit/decf1d71ff2fbbfb5e79c8edb6ca8e967a873dad) |
+| 7. | [240. Search in a 2D Matrix II](https://leetcode.com/problems/search-a-2d-matrix-ii/description/) | LeetCode | [Solution](https://github.com/abhishekaudupa/Online-Programming-Solutions/commit/416474de71ce12f0a57cbb5d4f213ab866cd165f) |
